@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 
 namespace Calculator
 {
@@ -9,33 +10,48 @@ namespace Calculator
             var calc = new Calc();
             calc.calcOpsHandler += CalcEventHandler;
             bool exit = false;
-            calc.Sum(Input());
-            while (!exit)
+            try
             {
-                PrintOperations();
-                char op = Console.ReadKey().KeyChar;
-                Console.WriteLine();
-                switch (op)
+                calc.Sum(Input());
+                while (!exit)
                 {
-                    case '+':
-                        calc.Sum(Input());
-                        break;
-                    case '-':
-                        calc.Sub(Input());
-                        break;
-                    case '*':
-                        calc.Pow(Input());
-                        break;
-                    case '/':
-                        calc.Div(Input());
-                        break;
-                    case '<':
-                         exit = !calc.CancelLast();
-                        break;
-                    case 'q':
-                        exit = true;
-                        break;
+                    PrintOperations();
+                    char op = Console.ReadKey().KeyChar;
+                    Console.WriteLine();
+                    switch (op)
+                    {
+                        case '+':
+                            calc.Sum(Input());
+                            break;
+                        case '-':
+                            calc.Sub(Input());
+                            break;
+                        case '*':
+                            calc.Pow(Input());
+                            break;
+                        case '/':
+                            calc.Div(Input());
+                            break;
+                        case '<':
+                            exit = !calc.CancelLast();
+                            break;
+                        case 'q':
+                            exit = true;
+                            break;
+                    }
                 }
+            }
+            catch (DivideByZeroException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (NegativeNumberException ex)
+            {
+                Console.WriteLine("Number can't be negative");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
             Console.WriteLine("Exit the app");
         }
@@ -47,6 +63,7 @@ namespace Calculator
             {
                 Console.WriteLine("It is not a number! Try again.");
             }
+
             return num;
         }
         public static void PrintOperations()

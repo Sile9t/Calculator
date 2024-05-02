@@ -11,7 +11,7 @@ namespace Calculator
         public double _result { get; set; } = 0D;
         public Stack<double> _lastResult { get; set; } = new Stack<double>();
 
-        public event EventHandler<EventArgs> calcOpsHandler;
+        public event EventHandler<EventArgs>? calcOpsHandler;
         public void PrintResult()
         {
             Console.Write("Result: ");
@@ -33,6 +33,8 @@ namespace Calculator
 
         public void Div(double x)
         {
+            if (x == 0) throw new DivideByZeroException();
+            if (x < 0) throw new NegativeNumberException();
             _result /= 1.0 * x;
             _lastResult.Push(_result);
             PrintResult();
@@ -40,6 +42,7 @@ namespace Calculator
 
         public void Pow(double x)
         {
+            if (x < 0) throw new NegativeNumberException();
             _result *= x;
             _lastResult.Push(_result);
             PrintResult();
@@ -47,6 +50,7 @@ namespace Calculator
 
         public void Sub(double x)
         {
+            if (x < 0) throw new NegativeNumberException();
             _result -= x;
             _lastResult.Push(_result);
             PrintResult();
@@ -54,9 +58,10 @@ namespace Calculator
 
         public void Sum(double x)
         {
+            if (x < 0) throw new NegativeNumberException();
             _result += x;
             _lastResult.Push(_result);
             PrintResult();
-        }     
+        }
     }
 }
